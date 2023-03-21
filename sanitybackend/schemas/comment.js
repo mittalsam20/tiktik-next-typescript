@@ -1,7 +1,7 @@
 export default {
   name: 'comment',
   title: 'Comment',
-  type: 'documnet',
+  type: 'document',
   fields: [
     {
       name: 'postedBy',

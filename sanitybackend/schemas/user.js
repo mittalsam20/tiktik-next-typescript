@@ -1,7 +1,7 @@
 export default {
   name: 'user',
   title: 'User',
-  type: 'documnet',
+  type: 'document',
   fields: [
     {
       name: 'userName',
