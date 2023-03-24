@@ -4,14 +4,18 @@ import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const Home: NextPage = () => {
+// interface Iprops{
+//   videos:
+// }
+const Home: NextPage = ({ videos }) => {
+  console.log(videos);
   return <h1 className="text-3xl font-bold underline">{"Hello world!"}</h1>;
 };
 
 export const getServerSideProps = async () => {
-  const response = await axios.get(`https://localhost:3000/api/post`);
+  const { data } = await axios.get(`http://localhost:3000/api/post`);
   return {
-    props: {},
+    props: { videos: data },
   };
 };
 
