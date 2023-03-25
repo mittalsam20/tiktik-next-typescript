@@ -9,7 +9,6 @@ import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import { BsPlay, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 
 import { Video } from "@/types";
-import Button from "@mui/material/Button";
 
 interface Iprops {
   post: Video;
@@ -31,8 +30,19 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
     playing: false,
     isMuted: false,
   });
-
   const { playing, isMuted } = videoStates;
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const onClickPlayPause = () => {
+    if (playing) {
+      videoRef?.current?.pause();
+      setVideoStates((prev) => ({ ...prev, playing: false }));
+      return;
+    }
+    videoRef?.current?.play();
+    setVideoStates((prev) => ({ ...prev, playing: true }));
+  };
+
   return (
     <div className={"flex flex-col border-b-2 border-gray-200 pb-6"}>
       <div>
@@ -86,19 +96,30 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
                 "lg:w-[600px] h-[300px] md:h-[400px] lg:h-[528px] w-[200px] rounded-2xl cursor-pointer bg-gray-100"
               }
               loop
+              ref={videoRef}
               src={video.asset.url}
             ></video>
           </Link>
 
           {isHover && (
-            <div>
+            <div
+              className={
+                "absolute bottom-6 curosr-pointer left-8 md:left-14 lg:left-0 flex gap-10 lg:justify-between w-[100px] md:w-[50px] p-3"
+              }
+            >
               {playing ? (
                 <button>
-                  <BsFillPauseFill className="text-black text-2xl lg:text-4xl" />
+                  <BsFillPauseFill
+                    onClick={onClickPlayPause}
+                    className="text-black text-2xl lg:text-4xl"
+                  />
                 </button>
               ) : (
                 <button>
-                  <BsFillPlayFill className="text-black text-2xl lg:text-4xl" />
+                  <BsFillPlayFill
+                    onClick={onClickPlayPause}
+                    className="text-black text-2xl lg:text-4xl"
+                  />
                 </button>
               )}
               {isMuted ? (
