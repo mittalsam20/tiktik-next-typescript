@@ -4,14 +4,17 @@ import Image from "next/legacy/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
 
 import { AiOutlineLogout } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import Logo from "../utils/tiktik-logo.png";
 
+import { createOrGetUser } from "@/utils";
+
 const Navbar = () => {
+  const user = false;
   return (
     <div
       className={
@@ -28,6 +31,19 @@ const Navbar = () => {
           />
         </div>
       </Link>
+      <div>SEARCH</div>
+      <div>
+        {user ? (
+          <div>{"Logged In"}</div>
+        ) : (
+          <GoogleLogin
+            onError={() => {}}
+            onSuccess={(response) => {
+              createOrGetUser(response);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };
