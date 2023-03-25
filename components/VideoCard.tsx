@@ -9,6 +9,7 @@ import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import { BsPlay, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 
 import { Video } from "@/types";
+import Button from "@mui/material/Button";
 
 interface Iprops {
   post: Video;
@@ -24,6 +25,14 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
     comments,
     userId,
   } = post;
+
+  const [isHover, setIsHover] = useState(false);
+  const [videoStates, setVideoStates] = useState({
+    playing: false,
+    isMuted: false,
+  });
+
+  const { playing, isMuted } = videoStates;
   return (
     <div className={"flex flex-col border-b-2 border-gray-200 pb-6"}>
       <div>
@@ -68,8 +77,8 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
       <div className={"lg:ml-20 felx gap-4 relative"}>
         <div
           className={"rounded-3xl"}
-          onMouseEnter={() => {}}
-          onMouseLeave={() => {}}
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
         >
           <Link href={"/"}>
             <video
@@ -80,6 +89,37 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
               src={video.asset.url}
             ></video>
           </Link>
+
+          {isHover && (
+            <div>
+              {playing ? (
+                <button>
+                  <BsFillPauseFill className="text-black text-2xl lg:text-4xl" />
+                </button>
+              ) : (
+                <button>
+                  <BsFillPlayFill className="text-black text-2xl lg:text-4xl" />
+                </button>
+              )}
+              {isMuted ? (
+                <button
+                  onClick={() =>
+                    setVideoStates((prev) => ({ ...prev, isMuted: false }))
+                  }
+                >
+                  <HiVolumeOff className="text-black text-2xl lg:text-4xl" />
+                </button>
+              ) : (
+                <button
+                  onClick={() =>
+                    setVideoStates((prev) => ({ ...prev, isMuted: true }))
+                  }
+                >
+                  <HiVolumeUp className="text-black text-2xl lg:text-4xl" />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
