@@ -90,10 +90,10 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
-          <Link href={"/"}>
+          <Link href={`/detail/${post._id}`}>
             <video
               className={
-                "lg:w-[600px] h-[300px] md:h-[400px] lg:h-[528px] w-[200px] rounded-2xl cursor-pointer bg-gray-100"
+                "lg:w-[650px] h-[300px] md:h-[400px] lg:h-[528px] w-[200px] rounded-2xl cursor-pointer bg-gray-100"
               }
               loop
               ref={videoRef}

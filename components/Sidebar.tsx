@@ -3,8 +3,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import GoogleLogin from "react-google-login";
-
 import { AiOutlineMenu, AiFillHome } from "react-icons/ai";
 import { ImCancelCircle } from "react-icons/im";
 
@@ -45,35 +43,6 @@ const Sidebar = () => {
             </Link>
           </div>
 
-          {!userProfile && (
-            <div className={"px-2 py-2 hidden xl:block"}>
-              <p className={"text-gray-400"}>
-                {"Login to like and comment on videos"}
-              </p>
-              <div className={"pr-4"}>
-                <GoogleLogin
-                  clientId={"-"}
-                  onSuccess={() => {}}
-                  onFailure={() => {}}
-                  cookiePolicy={"single_host_origin"}
-                  render={(renderProps) => {
-                    const { onClick, disabled } = renderProps;
-                    return (
-                      <button
-                        className={
-                          "cursor:pointer bg-white text-lg text-[#F51997] border-[1px] border-[#F51997]  font-semibold px-6 py-3 rounded-md outline-none w-full mt-3 hover:text-white hover:bg-[#F51997]"
-                        }
-                        onClick={() => onClick()}
-                        disabled={disabled}
-                      >
-                        {"Login"}
-                      </button>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-          )}
           <Discover />
           <SuggestedAccounts />
           <Footer />
