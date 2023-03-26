@@ -10,18 +10,31 @@ import { client } from "@/utils/client";
 import { topics } from "@/utils/constants";
 
 const Upload = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [caption, setCaption] = useState("");
   const [videoAsset, setVideoAsset] = useState<
     SanityAssetDocument | undefined
   >();
-  const [wrongFileType, setWrongFileType] = useState(false);
+  const [wrongFileType, setWrongFileType] = useState<Boolean>(false);
   const [topic, setTopic] = useState<String>(topics[0].name);
   const [savingPost, setSavingPost] = useState<Boolean>(false);
+
+  const { userProfile }: { userProfile: any } = useAuthStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!userProfile) router.push("/");
+  }, [userProfile, router]);
 
   const uploadVideo = async (e: any) => {
     const selectedFile = e.target.files[0];
     const fileTypes = ["video/mp4", "video/webm", "video/ogg"];
+
+    // uploading asset to sanity
     if (fileTypes.includes(selectedFile.type)) {
+      setWrongFileType(false);
+      setIsLoading(true);
+
       client.assets
         .upload("file", selectedFile, {
           contentType: selectedFile.type,
@@ -35,11 +48,41 @@ const Upload = () => {
       setIsLoading(false);
       setWrongFileType(true);
     }
-    e.preventDefault();
   };
 
-  const handleDiscard = () => {};
-  const handlePost = () => {};
+  const handlePost = async () => {
+    if (caption && videoAsset?._id && topic) {
+      setSavingPost(true);
+
+      const doc = {
+        _type: "post",
+        caption,
+        video: {
+          _type: "file",
+          asset: {
+            _type: "reference",
+            _ref: videoAsset?._id,
+          },
+        },
+        userId: userProfile?._id,
+        postedBy: {
+          _type: "postedBy",
+          _ref: userProfile?._id,
+        },
+        topic,
+      };
+      const BASE_URL = "http://localhost:3000";
+      await axios.post(`${BASE_URL}/api/post`, doc);
+      router.push("/");
+    }
+  };
+
+  const handleDiscard = () => {
+    setSavingPost(false);
+    setVideoAsset(undefined);
+    setCaption("");
+    setTopic("");
+  };
 
   return (
     <div className="flex w-full h-full absolute left-0 top-[60px] lg:top-[70px] mb-10 pt-10 lg:pt-20 bg-[#F8F8F8] justify-center">
@@ -53,23 +96,16 @@ const Upload = () => {
           </div>
           <div
             className={
-              "border-dashed rounded-xl border-4 border-gray-200 flex flex-col justify-center items-center outline-none mt-10 w-[260px] h-[460px] p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100"
+              "border-dashed rounded-xl border-4 border-gray-200 flex flex-col justify-center items-center outline-none mt-10 w-[260px] h-[458px] p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100"
             }
           >
             {isLoading ? (
-              <p>{"Uploading...."}</p>
+              <p className="text-center text-3xl text-red-400 font-semibold">
+                {"Uploading..."}
+              </p>
             ) : (
               <div>
-                {videoAsset ? (
-                  <div>
-                    <video
-                      loop
-                      controls
-                      src={videoAsset.url}
-                      className={"rounded-xl h-[450px] mt-16 bg-black"}
-                    ></video>
-                  </div>
-                ) : (
+                {!videoAsset ? (
                   <label className={"cursor-pointer"}>
                     <div
                       className={
@@ -84,6 +120,9 @@ const Upload = () => {
                             className={"text-gray-300 text-6xl"}
                           />
                         </p>
+                        <p className={"text-xl font-semibold"}>
+                          {"Select video to upload"}
+                        </p>
                       </div>
 
                       <p
@@ -92,10 +131,8 @@ const Upload = () => {
                         }
                       >
                         {"MP4 or WebM or ogg"} <br />
-                        {"720x1280 resolution or higher "}
-                        <br />
-                        {"Up to 10 minutes "}
-                        <br />
+                        {"720x1280 resolution or higher"} <br />
+                        {"Up to 10 minutes"} <br />
                         {"Less than 2 GB"}
                       </p>
                       <p
@@ -113,31 +150,55 @@ const Upload = () => {
                       className={"w-0 h-0"}
                     />
                   </label>
+                ) : (
+                  <div
+                    className={
+                      " rounded-3xl w-[300px]  p-4 flex flex-col gap-6 justify-center items-center"
+                    }
+                  >
+                    <video
+                      className={"rounded-xl h-[462px] mt-16 bg-black"}
+                      controls
+                      loop
+                      src={videoAsset?.url}
+                    />
+                    <div className=" flex justify-between gap-20">
+                      <p className="text-lg">{videoAsset.originalFilename}</p>
+                      <button
+                        type="button"
+                        className=" rounded-full bg-gray-200 text-red-400 p-2 text-xl cursor-pointer outline-none hover:shadow-md transition-all duration-500 ease-in-out"
+                        onClick={() => setVideoAsset(undefined)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
-            {wrongFileType && (
-              <p
-                className={
-                  "text-xl text-center font-semibold mt-4 w-[250px] text-red-400"
-                }
-              >
-                {"Please Select a valid video type"}
-              </p>
-            )}
           </div>
+          {wrongFileType && (
+            <p
+              className={
+                "text-center text-xl text-red-400 font-semibold mt-4 w-[260px]"
+              }
+            >
+              {"Please select a video file (mp4/webm/ogg)"}
+            </p>
+          )}
         </div>
-        <div className={"flex flex-col gap-3 pb-10"}>
-          <label className={"text-md font-medium"}>{"Caption"}</label>
+        <div className="flex flex-col gap-3 pb-10">
+          <label className="text-md font-medium ">{"Caption"}</label>
           <input
-            type="text"
-            value={""}
-            onChange={() => {}}
+            type={"text"}
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
             className="rounded lg:after:w-650 outline-none text-md border-2 border-gray-200 p-2"
           />
           <label className={"text-md font-medium"}>{"Choose a topic"}</label>
+
           <select
-            onChange={(e: any) => {
+            onChange={(e) => {
               setTopic(e.target.value);
             }}
             className="outline-none lg:w-650 border-2 border-gray-200 text-md capitalize lg:p-4 p-2 rounded cursor-pointer"
@@ -146,7 +207,7 @@ const Upload = () => {
               <option
                 key={name}
                 value={name}
-                className=" outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
+                className="outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
               >
                 {name}
               </option>
@@ -154,17 +215,21 @@ const Upload = () => {
           </select>
           <div className={"flex gap-6 mt-10"}>
             <button
-              onClick={handleDiscard}
               type={"button"}
-              className="border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
+              onClick={handleDiscard}
+              className={
+                "border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
+              }
             >
-              Discard
+              {"Discard"}
             </button>
             <button
               type={"button"}
               onClick={handlePost}
               disabled={videoAsset?.url ? false : true}
-              className="bg-[#F51997] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
+              className={
+                "bg-[#F51997] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
+              }
             >
               {savingPost ? "Posting..." : "Post"}
             </button>
