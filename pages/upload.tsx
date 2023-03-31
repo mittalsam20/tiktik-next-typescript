@@ -8,6 +8,7 @@ import { SanityAssetDocument } from "@sanity/client";
 import useAuthStore from "@/store/authStore";
 import { client } from "@/utils/client";
 import { topics } from "@/utils/constants";
+import { BASE_URL } from "@/utils";
 
 const Upload = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -71,7 +72,6 @@ const Upload = () => {
         },
         topic,
       };
-      const BASE_URL = "http://localhost:3000";
       await axios.post(`${BASE_URL}/api/post`, doc);
       router.push("/");
     }
