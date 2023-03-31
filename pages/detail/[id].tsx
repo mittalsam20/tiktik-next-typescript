@@ -18,7 +18,11 @@ interface IProps {
 
 const Detail = ({ postDetails }: IProps) => {
   const [post, setPost] = useState(postDetails);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [videoStates, setVideoStates] = useState({
+    playing: false,
+    isMuted: false,
+  });
+  const { playing, isMuted } = videoStates;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const {
@@ -34,14 +38,20 @@ const Detail = ({ postDetails }: IProps) => {
   } = post;
 
   const onClickVideo = ({}) => {
-    if (isPlaying) {
+    if (playing) {
       videoRef?.current?.pause();
-      setIsPlaying(false);
+      setVideoStates((prev) => ({ ...prev, playing: false }));
       return;
     }
     videoRef?.current?.play();
-    setIsPlaying(true);
+    setVideoStates((prev) => ({ ...prev, playing: true }));
   };
+
+  useEffect(() => {
+    if (post && videoRef?.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [post, isMuted]);
 
   if (!post) return null;
   return (
@@ -71,12 +81,35 @@ const Detail = ({ postDetails }: IProps) => {
             ></video>
           </div>
           <div className={"absolute top-[45%] left-[45%] cursor-pointer"}>
-            {!isPlaying && (
+            {!playing && (
               <button onClick={onClickVideo}>
                 <BsFillPlayFill className={"text-white text-6xl lg:text-8xl"} />
               </button>
             )}
           </div>
+        </div>
+        <div
+          className={
+            "absolute bottom-5 lg:bottom-10 right-5 lg:right-10 cursor-pointer"
+          }
+        >
+          {isMuted ? (
+            <button
+              onClick={() =>
+                setVideoStates((prev) => ({ ...prev, isMuted: false }))
+              }
+            >
+              <HiVolumeOff className="text-white text-2xl lg:text-4xl" />
+            </button>
+          ) : (
+            <button
+              onClick={() =>
+                setVideoStates((prev) => ({ ...prev, isMuted: true }))
+              }
+            >
+              <HiVolumeUp className="text-white text-2xl lg:text-4xl" />
+            </button>
+          )}
         </div>
       </div>
     </div>
