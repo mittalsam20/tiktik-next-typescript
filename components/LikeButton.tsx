@@ -3,12 +3,27 @@ import { MdFavorite } from "react-icons/md";
 
 import useAuthStore from "@/store/authStore";
 
-const LikeButton = () => {
-  const { userProfile } = useAuthStore();
+interface IProps {
+  likes: any[];
+  handleLike: () => void;
+  handleDislike: () => void;
+}
+
+const LikeButton = ({ likes, handleLike, handleDislike }: IProps) => {
+  const { userProfile }: any = useAuthStore();
   const [alreadyLiked, setAlreadyLiked] = useState(false);
+  const filteredLikes = likes?.filter((like) => like._ref == userProfile?._id);
+
+  useEffect(() => {
+    if (filteredLikes.length > 0) {
+      setAlreadyLiked(true);
+    } else {
+      setAlreadyLiked(false);
+    }
+  }, [likes, filteredLikes]);
 
   return (
-    <div className={"gap-6"}>
+    <div className={"flex gap-6"}>
       <div
         className={
           "mt-4 flex flex-col justify-center items-center cursor-pointer"
@@ -29,6 +44,7 @@ const LikeButton = () => {
             <MdFavorite className={"text-lg md:text-2xl"} />
           </div>
         )}
+        <p className="text-md font-semibold">{likes?.length || 0}</p>
       </div>
     </div>
   );
