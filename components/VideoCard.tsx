@@ -69,7 +69,7 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
           </div>
           <div className={""}>
             <Link href={"/"}>
-              <div className={"felx items-cetner gap-2"}>
+              <div className={"flex items-cetner gap-2"}>
                 <p
                   className={
                     "flex gap-2 items-center md:text-md font-bold text-primary"

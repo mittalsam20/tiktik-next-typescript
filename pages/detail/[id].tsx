@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 
 import { GoVerified } from "react-icons/go";
@@ -11,7 +11,7 @@ import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import axios from "axios";
 import { Video } from "@/types";
 import { BASE_URL } from "@/utils";
-
+import useAuthStore from "@/store/authStore";
 interface IProps {
   postDetails: Video;
 }
@@ -24,13 +24,14 @@ const Detail = ({ postDetails }: IProps) => {
   });
   const { playing, isMuted } = videoStates;
   const videoRef = useRef<HTMLVideoElement>(null);
-
+  const router = useRouter();
+  const { userProfile } = useAuthStore();
   const {
     _id: postId,
     caption,
     comments,
     likes,
-    postedBy,
+    postedBy: { userName, image: userImage },
     userId,
     video: {
       asset: { _id: videoId, url },
@@ -66,7 +67,7 @@ const Detail = ({ postDetails }: IProps) => {
         }
       >
         <div className={"absolute top-6 left-2 lg:left-6 flex gap-6 z-50"}>
-          <p>
+          <p className={"cursor-pointer"} onClick={() => router.back()}>
             <MdOutlineCancel className={"text-white text-[35px]"} />
           </p>
         </div>
@@ -110,6 +111,54 @@ const Detail = ({ postDetails }: IProps) => {
               <HiVolumeUp className="text-white text-2xl lg:text-4xl" />
             </button>
           )}
+        </div>
+      </div>
+      <div className={"relative w-[1000px] md:w-[900px] lg:w-[700px]"}>
+        <div className={"lg:mt-20 mt-10"}>
+          <div
+            className={"flex gap-3 p-2 curosr-pointer font-semibold rounded"}
+          >
+            <div className={"ml-4 md:w-20 md:h-20 w-16 h-16"}>
+              <Link href={"/"}>
+                <>
+                  <Image
+                    width={62}
+                    height={62}
+                    alt={"profile photo"}
+                    className={"rounded-full"}
+                    src={userImage}
+                    layout={"responsive"}
+                  />
+                </>
+              </Link>
+            </div>
+            <div className={""}>
+              <Link href={"/"}>
+                <div className={"flex flex-col mt-2 gap-2"}>
+                  <p
+                    className={
+                      "flex gap-2 items-center md:text-md font-bold text-primary"
+                    }
+                  >
+                    {userName} {` `}
+                    <GoVerified className={"text-blue-400 text-md"} />
+                  </p>
+                  <p
+                    className={
+                      "capitalize font-medium text-xs text-gray-500 hidden md:block"
+                    }
+                  >
+                    {userName}
+                  </p>
+                  <div className="mt-10 px-10">
+                    {/* {userProfile && <LikeButton />}
+                    <Comments /> */}
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+          <p className={"p-10 text-lg text-gray-600 "}>{caption}</p>
         </div>
       </div>
     </div>
