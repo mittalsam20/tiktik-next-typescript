@@ -22,7 +22,7 @@ interface IComment {
   comment: string;
   length?: number;
   _key: string;
-  postedBy: { _ref: string; _type: string };
+  postedBy: { _ref: string; _type?: string };
 }
 
 const Comments = ({
