@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Image from "next/legacy/image";
 import Link from "next/link";
@@ -11,13 +11,26 @@ import { BiSearch } from "react-icons/bi";
 import { IoMdAdd } from "react-icons/io";
 import Logo from "../utils/tiktik-logo.png";
 
+import { IUser } from "@/types";
 import { createOrGetUser } from "@/utils";
 import useAuthStore from "@/store/authStore";
 
 const Navbar = () => {
   const { userProfile, addUser, removeUser } = useAuthStore();
+  const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const handleSearch = (e: any) => {};
+  const [user, setUser] = useState<IUser | null>();
+
+  useEffect(() => {
+    setUser(userProfile);
+  }, [userProfile]);
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    if (searchText) {
+      router.push(`/search/${searchText}`);
+    }
+  };
 
   return (
     <div
@@ -58,7 +71,7 @@ const Navbar = () => {
         </form>
       </div>
 
-      {userProfile ? (
+      {user ? (
         <div className={"flex gap-5 md:gap-10"}>
           <Link href={"/upload"}>
             <button
@@ -71,7 +84,7 @@ const Navbar = () => {
               <span className={"hidden md:block"}>{"Upload"}</span>
             </button>
           </Link>
-          {userProfile?.image && (
+          {user?.image && (
             <Link href={"/"}>
               <>
                 <Image
@@ -79,7 +92,7 @@ const Navbar = () => {
                   height={40}
                   alt={"profile photo"}
                   className={"rounded-full cursor-pointer"}
-                  src={userProfile?.image}
+                  src={user?.image}
                 />
               </>
             </Link>
