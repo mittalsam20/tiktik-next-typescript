@@ -22,7 +22,7 @@ interface IComment {
   comment: string;
   length?: number;
   _key: string;
-  postedBy: { _ref: string; _id: string };
+  postedBy: { _ref: string; _type: string };
 }
 
 const Comments = ({
@@ -41,7 +41,7 @@ const Comments = ({
           comments?.map((item: IComment, idx: number) =>
             allUsers?.map(
               (user: IUser) =>
-                user._id === (item.postedBy._ref || item.postedBy._id) && (
+                user._id === item.postedBy._ref && (
                   <div className=" p-2 items-center" key={idx}>
                     <Link href={`/profile/${user._id}`}>
                       <div className="flex items-start gap-3">
