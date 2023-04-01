@@ -20,6 +20,8 @@ interface IProps {
 
 const Detail = ({ postDetails }: IProps) => {
   const [post, setPost] = useState(postDetails);
+  const [comment, setComment] = useState("");
+  const [isPostingComment, setIsPostingComment] = useState(false);
   const [videoStates, setVideoStates] = useState({
     playing: false,
     isMuted: false,
@@ -64,6 +66,20 @@ const Detail = ({ postDetails }: IProps) => {
         like,
       });
       setPost((prevState) => ({ ...prevState, likes: data.likes }));
+    }
+  };
+
+  const addComment = async (e) => {
+    e.preventDefault();
+    if (userProfile && comment) {
+      setIsPostingComment(true);
+      const { data } = await axios.put(`${BASE_URL}/api/post/${post._id}`, {
+        userId: userProfile._id,
+        comment,
+      });
+      setPost((prevState) => ({ ...prevState, comments: data.comments }));
+      setComment("");
+      setIsPostingComment(false);
     }
   };
 
@@ -146,8 +162,8 @@ const Detail = ({ postDetails }: IProps) => {
               </Link>
             </div>
             <div className={""}>
-              <Link href={"/"}>
-                <div className={"flex flex-col mt-2 gap-2"}>
+              <div className={"flex flex-col mt-2 gap-2"}>
+                <Link href={"/"}>
                   <p
                     className={
                       "flex gap-2 items-center md:text-md font-bold text-primary"
@@ -163,19 +179,25 @@ const Detail = ({ postDetails }: IProps) => {
                   >
                     {userName}
                   </p>
+                </Link>
 
-                  <div className="mt-10 px-10">
-                    {userProfile && (
-                      <LikeButton
-                        likes={post.likes}
-                        handleLike={() => handleLike(true)}
-                        handleDislike={() => handleLike(false)}
-                      />
-                    )}
-                    <Comments />
-                  </div>
+                <div className="mt-10 px-10">
+                  {userProfile && (
+                    <LikeButton
+                      likes={post.likes}
+                      handleLike={() => handleLike(true)}
+                      handleDislike={() => handleLike(false)}
+                    />
+                  )}
+                  <Comments
+                    comment={comment}
+                    comments={post.comments}
+                    isPostingComment={isPostingComment}
+                    setComment={setComment}
+                    addComment={addComment}
+                  />
                 </div>
-              </Link>
+              </div>
             </div>
           </div>
           <p className={"p-10 text-lg text-gray-600 "}>{caption}</p>
