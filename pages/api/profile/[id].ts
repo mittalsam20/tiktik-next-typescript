@@ -18,7 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const userLikedPosts = await client.fetch(
       userLikedPostsQuery(id as string)
     );
-    console.log(user);
     res.status(200).json({ user: user[0], userCreatedPosts, userLikedPosts });
   }
 };
