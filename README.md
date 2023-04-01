@@ -36,3 +36,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+- Features To add
+  - [ ] ObserverControl play and pause
+  - [ ] Infinite Scrolling with Pagination
+  - [ ] replace sanity.io with express.js server
+  - [ ] upload media via multer instead of sanity.io
+  - [ ] replace REST with graphQL
+  - [ ] add authentication login also
+  - [ ] publish npm package for nested comments
+  - [ ] use my npm package for nested comments
+  - [ ] like and comment in the post itself
+  - [ ] ability to upload photos/text
+  - [ ] display caption in the feed itself
+  - [ ] verified users are those who have
+       - email and phone verified
+       - uploaded 10 videos
+       - have 10 followers
+  - [ ] ability to follow users and ability to see followers/following
+  - [ ] ability to subscribe users
+  - [ ] notification when subscribed users post something 
