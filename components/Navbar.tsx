@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Image from "next/legacy/image";
 import Link from "next/link";
@@ -16,6 +16,9 @@ import useAuthStore from "@/store/authStore";
 
 const Navbar = () => {
   const { userProfile, addUser, removeUser } = useAuthStore();
+  const [searchText, setSearchText] = useState("");
+  const handleSearch = (e: any) => {};
+
   return (
     <div
       className={
@@ -32,54 +35,74 @@ const Navbar = () => {
           />
         </div>
       </Link>
-      <div>SEARCH</div>
-      <div>
-        {userProfile ? (
-          <div className={"flex gap-5 md:gap-10"}>
-            <Link href={"/upload"}>
-              <button
-                onClick={() => {}}
-                className={
-                  "border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2"
-                }
-              >
-                <IoMdAdd className={"text-xl"} />{" "}
-                <span className={"hidden md:block"}>{"Upload"}</span>
-              </button>
-            </Link>
-            {userProfile.image && (
-              <Link href={"/"}>
-                <>
-                  <Image
-                    width={40}
-                    height={40}
-                    alt={"profile photo"}
-                    className={"rounded-full cursor-pointer"}
-                    src={userProfile.image}
-                  />
-                </>
-              </Link>
-            )}
-            <button
-              type={"button"}
-              className={"px-2"}
-              onClick={() => {
-                googleLogout();
-                removeUser();
-              }}
-            >
-              <AiOutlineLogout color={"red"} fontSize={21} />
-            </button>
-          </div>
-        ) : (
-          <GoogleLogin
-            onError={() => {}}
-            onSuccess={(response) => {
-              createOrGetUser(response, addUser);
-            }}
+
+      <div className={"relative hidden md:block"}>
+        <form
+          onSubmit={handleSearch}
+          className={"absolute md:static top-10 -left-20 bg-white"}
+        >
+          <input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="bg-primary p-3 md:text-md font-medium border-2 border-gray-100 focus:outline-none focus:border-2 focus:border-gray-300 w-[300px] md:w-[350px] rounded-full  md:top-0"
+            placeholder={"Search accounts and videos"}
           />
-        )}
+          <button
+            onClick={handleSearch}
+            className={
+              "absolute md:right-5 right-6 top-4 border-l-2 border-gray-300 pl-4 text-2xl text-gray-400"
+            }
+          >
+            <BiSearch />
+          </button>
+        </form>
       </div>
+
+      {userProfile ? (
+        <div className={"flex gap-5 md:gap-10"}>
+          <Link href={"/upload"}>
+            <button
+              onClick={() => {}}
+              className={
+                "border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2"
+              }
+            >
+              <IoMdAdd className={"text-xl"} />{" "}
+              <span className={"hidden md:block"}>{"Upload"}</span>
+            </button>
+          </Link>
+          {userProfile?.image && (
+            <Link href={"/"}>
+              <>
+                <Image
+                  width={40}
+                  height={40}
+                  alt={"profile photo"}
+                  className={"rounded-full cursor-pointer"}
+                  src={userProfile?.image}
+                />
+              </>
+            </Link>
+          )}
+          <button
+            type={"button"}
+            className={"px-2"}
+            onClick={() => {
+              googleLogout();
+              removeUser();
+            }}
+          >
+            <AiOutlineLogout color={"red"} fontSize={21} />
+          </button>
+        </div>
+      ) : (
+        <GoogleLogin
+          onError={() => {}}
+          onSuccess={(response) => {
+            createOrGetUser(response, addUser);
+          }}
+        />
+      )}
     </div>
   );
 };

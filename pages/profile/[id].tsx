@@ -54,7 +54,7 @@ const Profile = ({ data }: IProps) => {
 
         <div>
           <div className="text-md md:text-2xl font-bold tracking-wider flex gap-2 items-center justify-center lowercase">
-            <span>{user.userName.replace(/\s+/g, "")} </span>
+            <span>{user.userName} </span>
             <GoVerified className={"text-blue-400 md:text-xl text-md"} />
           </div>
           <p className={"text-sm font-medium"}> {user.userName}</p>
