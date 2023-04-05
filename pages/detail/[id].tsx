@@ -184,14 +184,14 @@ const Detail = ({ postDetails }: IProps) => {
                 <div className="mt-10 px-10">
                   {userProfile && (
                     <LikeButton
-                      likes={post.likes}
+                      likes={post.likes || []}
                       handleLike={() => handleLike(true)}
                       handleDislike={() => handleLike(false)}
                     />
                   )}
                   <Comments
                     comment={comment}
-                    comments={post.comments}
+                    comments={post.comments || []}
                     isPostingComment={isPostingComment}
                     setComment={setComment}
                     addComment={addComment}

@@ -27,7 +27,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </div>
           <div
             className={
-              "mt-4 flex flex-col gap-10 overflow-auto h-[88vh] videos felx-1 "
+              "mt-4 flex flex-col gap-10 overflow-auto h-[88vh] videos flex-1 "
             }
           >
             <Component {...pageProps} />;
