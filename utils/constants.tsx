@@ -37,27 +37,17 @@ export const topics = [
   },
 ];
 
-export const footerList1 = [
-  "About",
-  "Newsroom",
-  "Store",
-  "Contact",
-  "Carrers",
-  "ByteDance",
-  "Creator Directory",
-];
-export const footerList2 = [
-  "TikTik for Good",
-  "Advertise",
-  "Developers",
-  "Transparency",
-  "TikTik Rewards",
-];
-export const footerList3 = [
-  "Help",
-  "Safety",
-  "Terms",
-  "Privacy",
-  "Creator Portal",
-  "Community Guidelines",
+export const footerList = [
+  {
+    text: "Portfolio",
+    route: "https://sammittal.netlify.app/",
+  },
+  {
+    text: "Linkedin",
+    route: "https://www.linkedin.com/in/samaksh-mittal-967447168/",
+  },
+  {
+    text: "Github",
+    route: "https://github.com/mittalsam20",
+  },
 ];

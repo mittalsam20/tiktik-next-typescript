@@ -17,7 +17,7 @@ const SuggestedAccounts = () => {
       <p className={"text-gray-500 font-semibold m-3 mt-4 hidden xl:block"}>
         {"Suggested Accounts"}
       </p>
-      <div>
+      <div className="flex flex-col items-center xl:block">
         {allUsers.slice(0, 6).map((user) => {
           const { _id, image, userName } = user;
           return (

@@ -1,16 +1,21 @@
 import React from "react";
-import { footerList1, footerList2, footerList3 } from "@/utils/constants";
+import Link from "next/link";
+import { footerList } from "@/utils/constants";
 
-const List = ({ items, mt }: { items: string[]; mt: boolean }) => {
+interface IFooterItem {
+  text: string;
+  route: string;
+}
+
+const List = ({ items }: { items: IFooterItem[] }) => {
   return (
-    <div className={`flex flex-wrap gap-2 ${mt && "mt-5"}`}>
-      {items.map((item, index) => (
-        <p
-          key={index}
-          className={"text-gray-400 text-sm hover:underline cursor-pointer"}
-        >
-          {item}
-        </p>
+    <div className={"flex flex-wrap gap-2 "}>
+      {items.map(({ text, route }, index) => (
+        <Link key={index} href={route}>
+          <p className={"text-gray-400 text-sm hover:underline cursor-pointer"}>
+            {text}
+          </p>
+        </Link>
       ))}
     </div>
   );
@@ -18,11 +23,11 @@ const List = ({ items, mt }: { items: string[]; mt: boolean }) => {
 
 const Footer = () => {
   return (
-    <div className={"mt-6 hidden xl:block"}>
-      <List items={footerList1} mt={false} />
-      <List items={footerList2} mt />
-      <List items={footerList3} mt />
-      <p className={"text-gray-400 text-sm mt-5"}>{"2023 TikTik"}</p>
+    <div className={"mt-4 hidden xl:block"}>
+      <List items={footerList} />
+      <p className={"text-gray-400 text-sm mt-5"}>
+        {"Developed By Samaksh Mittal @ 2023 TypeTik"}
+      </p>
     </div>
   );
 };

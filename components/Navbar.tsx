@@ -35,20 +35,20 @@ const Navbar = () => {
   return (
     <div
       className={
-        "w-full flex justify-between items-center border-b-2 border-gray-200 py-2 px-4"
+        "w-full flex justify-between  items-center border-b-2 border-gray-200 py-2 px-4"
       }
     >
-      <Link href="/">
-        <div className={"w-[100px] md:w-[130px]"}>
-          <Image
-            src={Logo}
-            alt={"tiktik"}
-            layout={"responsive"}
-            className={"cursor-pointer"}
-          />
-        </div>
-      </Link>
-
+      <div
+        className={"w-[100px] md:w-[130px]"}
+        onClick={() => router.push("/")}
+      >
+        <Image
+          src={Logo}
+          alt={"typeTik"}
+          layout={"responsive"}
+          className={"cursor-pointer"}
+        />
+      </div>
       <div className={"relative hidden md:block"}>
         <form
           onSubmit={handleSearch}
@@ -73,33 +73,30 @@ const Navbar = () => {
 
       {user ? (
         <div className={"flex gap-5 md:gap-10"}>
-          <Link href={"/upload"}>
-            <button
-              onClick={() => {}}
-              className={
-                "border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2"
-              }
-            >
-              <IoMdAdd className={"text-xl"} />{" "}
-              <span className={"hidden md:block"}>{"Upload"}</span>
-            </button>
-          </Link>
+          <button
+            onClick={() => router.push("/upload")}
+            className={
+              "border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2 rounded-lg"
+            }
+          >
+            <IoMdAdd className={"text-xl"} />
+            <span className={"hidden md:block"}>{"Upload"}</span>
+          </button>
           {user?.image && (
-            <Link href={"/"}>
-              <>
-                <Image
-                  width={40}
-                  height={40}
-                  alt={"profile photo"}
-                  className={"rounded-full cursor-pointer"}
-                  src={user?.image}
-                />
-              </>
-            </Link>
+            <Image
+              width={41}
+              height={41}
+              alt={"profile photo"}
+              className={"rounded-full cursor-pointer"}
+              src={user?.image}
+              onClick={() => router.push(`/profile/${user._id}`)}
+            />
           )}
           <button
             type={"button"}
-            className={"px-2"}
+            className={
+              "border-2 p-2 rounded-full cursor-pointer outline-none shadow-md"
+            }
             onClick={() => {
               googleLogout();
               removeUser();
