@@ -28,7 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               "pt-4 mr-4 flex flex-col gap-10 overflow-auto h-[88vh] videos flex-1 "
             }
           >
-            <Component {...pageProps} />;
+            <Component {...pageProps} />
           </div>
         </div>
       </div>

@@ -9,12 +9,17 @@ import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import { BsPlay, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 
 import { Video } from "@/types";
+import LikeButton from "./LikeButton";
+import useAuthStore from "@/store/authStore";
+import axios from "axios";
+import { BASE_URL } from "@/utils";
 
 interface Iprops {
   post: Video;
+  showDetails: Boolean;
 }
 
-const VideoCard: NextPage<Iprops> = ({ post }) => {
+const VideoCard: NextPage<Iprops> = ({ post: postDetails, showDetails }) => {
   const {
     _id,
     caption,
@@ -23,15 +28,28 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
     likes,
     comments,
     userId,
-  } = post;
+  } = postDetails;
+  const { userProfile }: any = useAuthStore();
 
   const [isHover, setIsHover] = useState(false);
+  const [post, setPost] = useState(postDetails);
   const [videoStates, setVideoStates] = useState({
     playing: false,
     isMuted: false,
   });
   const { playing, isMuted } = videoStates;
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleLike = async (like: boolean) => {
+    if (userProfile) {
+      const { data } = await axios.put(`${BASE_URL}/api/like`, {
+        userId: userProfile._id,
+        postId: _id,
+        like,
+      });
+      setPost((prevState) => ({ ...prevState, likes: data.likes }));
+    }
+  };
 
   const onClickPlayPause = () => {
     if (playing) {
@@ -49,8 +67,9 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
     }
   }, [isMuted]);
 
+  useEffect(() => {}, [post]);
   return (
-    <div className={"flex flex-col border-b-2 border-gray-200 pb-6"}>
+    <div className={"flex flex-col border-b-2 border-gray-200 pb-3"}>
       <div>
         <div
           className={
@@ -151,6 +170,16 @@ const VideoCard: NextPage<Iprops> = ({ post }) => {
           )}
         </div>
       </div>
+      {showDetails && (
+        <div className="flex gap-4 items-center lg:ml-20 ml-5 mt-2">
+          <LikeButton
+            likes={likes || []}
+            handleLike={() => handleLike(true)}
+            handleDislike={() => handleLike(false)}
+          />
+          <span className="">{caption}</span>
+        </div>
+      )}
     </div>
   );
 };

@@ -108,7 +108,7 @@ const Search = ({ videos }: IProps) => {
           <div className="flex flex-1 h-full flex-wrap gap-6">
             {videos.length ? (
               videos.map((post: Video, idx: number) => (
-                <VideoCard post={post} key={idx} />
+                <VideoCard post={post} key={idx} showDetails={false} />
               ))
             ) : (
               <NoResults

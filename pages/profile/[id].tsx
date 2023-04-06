@@ -79,7 +79,7 @@ const Profile = ({ data }: IProps) => {
         <div className={"flex flex-1 gap-6 flex-wrap  h-full "}>
           {videosList.length > 0 ? (
             videosList.map((post: Video, index: number) => (
-              <VideoCard key={index} post={post} />
+              <VideoCard key={index} post={post} showDetails={true} />
             ))
           ) : (
             <NoResults

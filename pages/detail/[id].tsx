@@ -73,7 +73,7 @@ const Detail = ({ postDetails }: IProps) => {
     e.preventDefault();
     if (userProfile && comment) {
       setIsPostingComment(true);
-      const { data } = await axios.put(`${BASE_URL}/api/post/${post._id}`, {
+      const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
         userId: userProfile._id,
         comment,
       });
@@ -144,15 +144,15 @@ const Detail = ({ postDetails }: IProps) => {
               />
               <div>
                 <div className="text-xl font-bold lowercase tracking-wider flex gap-2 items-center justify-center">
-                  {post.postedBy.userName.replace(/\s+/g, "")}{" "}
+                  {userName.replace(/\s+/g, "")}{" "}
                   <GoVerified className="text-blue-400 text-xl" />
                 </div>
-                <p className="text-md"> {post.postedBy.userName}</p>
+                <p className="text-md"> {userName}</p>
               </div>
             </div>
           </Link>
           <div className="px-10">
-            <p className=" text-md text-gray-600">{post.caption}</p>
+            <p className=" text-md text-gray-600">{caption}</p>
           </div>
           <div className="mt-10 px-10">
             {userProfile && (
