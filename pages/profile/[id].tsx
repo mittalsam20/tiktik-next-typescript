@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Image from "next/legacy/image";
 import { GoVerified } from "react-icons/go";
+import { MdOutlineVideocamOff } from "react-icons/md";
 
 import { BASE_URL } from "@/utils";
 import { IUser, Video } from "@/types";
@@ -60,8 +61,8 @@ const Profile = ({ data }: IProps) => {
           <p className={"text-sm font-medium"}> {user.userName}</p>
         </div>
       </div>
-      <div>
-        <div className="flex gap-10 mb-10 mt-10 border-b-2 border-gray-200 bg-white w-full">
+      <div className={"flex flex-col flex-1 h-full"}>
+        <div className="flex gap-10 mb-10 mt-5 border-b-2 border-gray-200 bg-white w-full">
           <p
             onClick={() => setShowUserVideos(true)}
             className={`text-xl font-semibold cursor-pointer ${videos} mt-2`}
@@ -75,14 +76,14 @@ const Profile = ({ data }: IProps) => {
             {"Liked"}
           </p>
         </div>
-        <div className={"flex gap-6 flex-wrap md:justify-start"}>
+        <div className={"flex flex-1 gap-6 flex-wrap  h-full "}>
           {videosList.length > 0 ? (
             videosList.map((post: Video, index: number) => (
               <VideoCard key={index} post={post} />
             ))
           ) : (
             <NoResults
-              IconComponent={GoVerified}
+              IconComponent={MdOutlineVideocamOff}
               text={`No ${showUserVideos ? "" : "Liked"} Videos Yet`}
             />
           )}
