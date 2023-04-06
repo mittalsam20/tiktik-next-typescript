@@ -53,12 +53,24 @@ const Profile = ({ data }: IProps) => {
           />
         </div>
 
-        <div>
-          <div className="text-md md:text-2xl font-bold tracking-wider flex gap-2 items-center justify-center lowercase">
-            <span>{user.userName} </span>
-            <GoVerified className={"text-blue-400 md:text-xl text-md"} />
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col text-md md:text-2xl font-bold tracking-wider lowercase">
+            <div className="flex items-center gap-2">
+              {user.userName}
+              <GoVerified className={"text-blue-400 md:text-xl text-md"} />
+            </div>
+            <p className={"text-sm font-medium"}> {user.userName}</p>
           </div>
-          <p className={"text-sm font-medium"}> {user.userName}</p>
+          <div className="flex justify-between gap-14">
+            <div className="flex flex-col items-center gap-2 text-xl font-medium">
+              <span>{"Total Posts"}</span>
+              <span>{userCreatedPosts.length}</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 text-xl font-medium">
+              <span>{"Posts Liked"}</span>
+              <span>{userLikedPosts.length}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className={"flex flex-col flex-1 h-full"}>
