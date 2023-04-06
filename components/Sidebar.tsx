@@ -17,7 +17,7 @@ const Sidebar = () => {
   return (
     <div className="h-[92vh] overflow-hidden xl:hover:overflow-auto">
       <div
-        className={"block xl:hidden m-1 ml-7 mt-3  text-xl "}
+        className={"block xl:hidden m-1 ml-7 mt-3  text-xl cursor-pointer"}
         onClick={() => {
           setShowSidebar((prevState) => !prevState);
         }}

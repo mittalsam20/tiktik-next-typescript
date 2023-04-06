@@ -32,6 +32,10 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    if (router.query.searchTerm == undefined) setSearchText("");
+  }, [router, router.route]);
+
   return (
     <div
       className={

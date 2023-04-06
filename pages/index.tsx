@@ -19,11 +19,7 @@ const Home = ({ videos }: Iprops) => {
     <div className="flex flex-col gap-10 videos h-full items-center">
       {videos.length ? (
         videos.map((video: Video) => {
-          return (
-            <>
-              <VideoCard post={video} key={video._id} showDetails={true} />
-            </>
-          );
+          return <VideoCard post={video} key={video._id} showDetails={true} />;
         })
       ) : (
         <NoResults IconComponent={BiSearch} text={"No Videos Yet"} />
