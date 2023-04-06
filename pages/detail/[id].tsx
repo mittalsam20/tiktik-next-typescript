@@ -23,10 +23,10 @@ const Detail = ({ postDetails }: IProps) => {
   const [comment, setComment] = useState("");
   const [isPostingComment, setIsPostingComment] = useState(false);
   const [videoStates, setVideoStates] = useState({
-    playing: false,
+    isPlaying: false,
     isMuted: false,
   });
-  const { playing, isMuted } = videoStates;
+  const { isPlaying, isMuted } = videoStates;
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { userProfile }: any = useAuthStore();
@@ -43,7 +43,7 @@ const Detail = ({ postDetails }: IProps) => {
   } = post;
 
   const onClickVideo = ({}) => {
-    if (playing) {
+    if (isPlaying) {
       videoRef?.current?.pause();
       setVideoStates((prev) => ({ ...prev, playing: false }));
       return;
@@ -62,14 +62,14 @@ const Detail = ({ postDetails }: IProps) => {
     if (userProfile) {
       const { data } = await axios.put(`${BASE_URL}/api/like`, {
         userId: userProfile._id,
-        postId: postId,
+        postId,
         like,
       });
       setPost((prevState) => ({ ...prevState, likes: data.likes }));
     }
   };
 
-  const addComment = async (e: any) => {
+  const addComment = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (userProfile && comment) {
       setIsPostingComment(true);
@@ -85,19 +85,11 @@ const Detail = ({ postDetails }: IProps) => {
 
   if (!post) return null;
   return (
-    <div
-      className={
-        "flex w-full absolute left-0 top-0 bg-white flex-wrap lg:flex-nowrap"
-      }
-    >
-      <div
-        className={
-          "relative flex-2 w-[1000px] lg:w-9/12 flex justify-center items-center bg-blurred-img bg-no-repeat bg-cover bg-center"
-        }
-      >
-        <div className={"absolute top-6 left-2 lg:left-6 flex gap-6 z-50"}>
-          <p className={"cursor-pointer"} onClick={() => router.back()}>
-            <MdOutlineCancel className={"text-white text-[35px]"} />
+    <div className="flex w-full absolute left-0 top-0 bg-white flex-wrap lg:flex-nowrap">
+      <div className="relative flex-2 w-[1000px] lg:w-9/12 flex justify-center items-center bg-blurred-img bg-no-repeat bg-cover bg-center">
+        <div className="opacity-90 absolute top-6 left-2 lg:left-6 flex gap-6 z-50">
+          <p className="cursor-pointer " onClick={() => router.back()}>
+            <MdOutlineCancel className="text-white text-[35px] hover:opacity-90" />
           </p>
         </div>
         <div className={"relative"}>
@@ -110,26 +102,23 @@ const Detail = ({ postDetails }: IProps) => {
               className={"cursor-pointer h-full"}
             ></video>
           </div>
-          <div className={"absolute top-[45%] left-[45%] cursor-pointer"}>
-            {!playing && (
+
+          <div className="absolute top-[45%] left-[40%]  cursor-pointer">
+            {!isPlaying && (
               <button onClick={onClickVideo}>
-                <BsFillPlayFill className={"text-white text-6xl lg:text-8xl"} />
+                <BsFillPlayFill className="text-white text-6xl lg:text-8xl" />
               </button>
             )}
           </div>
         </div>
-        <div
-          className={
-            "absolute bottom-5 lg:bottom-10 right-5 lg:right-10 cursor-pointer"
-          }
-        >
+        <div className="absolute bottom-5 lg:bottom-10 right-5 lg:right-10  cursor-pointer">
           {isMuted ? (
             <button
               onClick={() =>
                 setVideoStates((prev) => ({ ...prev, isMuted: false }))
               }
             >
-              <HiVolumeOff className="text-white text-2xl lg:text-4xl" />
+              <HiVolumeOff className="text-white text-3xl lg:text-4xl" />
             </button>
           ) : (
             <button
@@ -137,70 +126,51 @@ const Detail = ({ postDetails }: IProps) => {
                 setVideoStates((prev) => ({ ...prev, isMuted: true }))
               }
             >
-              <HiVolumeUp className="text-white text-2xl lg:text-4xl" />
+              <HiVolumeUp className="text-white text-3xl lg:text-4xl" />
             </button>
           )}
         </div>
       </div>
-      <div className={"relative w-[1000px] md:w-[900px] lg:w-[700px]"}>
-        <div className={"lg:mt-20 mt-10"}>
-          <div
-            className={"flex gap-3 p-2 cursor-pointer font-semibold rounded"}
-          >
-            <div className={"ml-4 md:w-20 md:h-20 w-16 h-16"}>
-              <Link href={"/"}>
-                <>
-                  <Image
-                    width={62}
-                    height={62}
-                    alt={"profile photo"}
-                    className={"rounded-full"}
-                    src={userImage}
-                    layout={"responsive"}
-                  />
-                </>
-              </Link>
-            </div>
-            <div className={""}>
-              <div className={"flex flex-col mt-2 gap-2"}>
-                <Link href={"/"}>
-                  <p
-                    className={
-                      "flex gap-2 items-center md:text-md font-bold text-primary"
-                    }
-                  >
-                    {userName} {` `}
-                    <GoVerified className={"text-blue-400 text-md"} />
-                  </p>
-                  <p
-                    className={
-                      "capitalize font-medium text-xs text-gray-500 hidden md:block"
-                    }
-                  >
-                    {userName}
-                  </p>
-                </Link>
-
-                <div className="mt-10 px-10">
-                  {userProfile && (
-                    <LikeButton
-                      likes={post.likes || []}
-                      handleLike={() => handleLike(true)}
-                      handleDislike={() => handleLike(false)}
-                    />
-                  )}
-                  <Comments
-                    comment={comment}
-                    comments={post.comments || []}
-                    isPostingComment={isPostingComment}
-                    setComment={setComment}
-                    addComment={addComment}
-                  />
+      <div className="relative w-[1000px] md:w-[900px] lg:w-[700px]">
+        <div className="lg:mt-20 mt-10">
+          <Link href={`/profile/${post.postedBy._id}`}>
+            <div className="flex gap-4 mb-4 bg-white w-full pl-10 cursor-pointer">
+              <Image
+                width={60}
+                height={60}
+                src={userImage}
+                alt="user-profile"
+                className="rounded-full"
+              />
+              <div>
+                <div className="text-xl font-bold lowercase tracking-wider flex gap-2 items-center justify-center">
+                  {post.postedBy.userName.replace(/\s+/g, "")}{" "}
+                  <GoVerified className="text-blue-400 text-xl" />
                 </div>
+                <p className="text-md"> {post.postedBy.userName}</p>
               </div>
             </div>
+          </Link>
+          <div className="px-10">
+            <p className=" text-md text-gray-600">{post.caption}</p>
           </div>
-          <p className={"p-10 text-lg text-gray-600 "}>{caption}</p>
+          <div className="mt-10 px-10">
+            {userProfile && (
+              <LikeButton
+                // flex={"flex"}
+                likes={likes || []}
+                handleLike={() => handleLike(true)}
+                handleDislike={() => handleLike(false)}
+              />
+            )}
+          </div>
+          <Comments
+            comment={comment}
+            setComment={setComment}
+            addComment={addComment}
+            comments={comments || []}
+            isPostingComment={isPostingComment}
+          />
         </div>
       </div>
     </div>
