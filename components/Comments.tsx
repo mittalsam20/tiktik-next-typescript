@@ -23,6 +23,7 @@ interface IComment {
   length?: number;
   _key: string;
   postedBy: { _ref?: string; _type?: string };
+  parentId: string;
 }
 
 const Comments = ({

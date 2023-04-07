@@ -13,7 +13,9 @@ import { Video } from "@/types";
 import { BASE_URL } from "@/utils";
 import useAuthStore from "@/store/authStore";
 import LikeButton from "@/components/LikeButton";
-import Comments from "@/components/Comments";
+// import Comments from "@/components/Comments";
+import Comments from "../../components/nestedComments/comments";
+
 interface IProps {
   postDetails: Video;
 }
@@ -69,19 +71,69 @@ const Detail = ({ postDetails }: IProps) => {
     }
   };
 
-  const addComment = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (userProfile && comment) {
-      setIsPostingComment(true);
-      const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
-        userId: userProfile._id,
-        comment,
-      });
-      setPost((prevState) => ({ ...prevState, comments: data.comments }));
-      setComment("");
-      setIsPostingComment(false);
-    }
+  const addComment = async ({
+    text,
+    event,
+    parentId,
+  }: {
+    text: string;
+    parentId: string;
+    event: { preventDefault: () => void };
+  }) => {
+    event.preventDefault();
+    console.log(text, event, parentId);
+    // if (userProfile && comment) {
+    //   setIsPostingComment(true);
+    //   const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
+    //     userId: userProfile._id,
+    //     parentId,
+    //     comment,
+    //   });
+    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
+    //   setComment("");
+    //   setIsPostingComment(false);
+    // }
   };
+
+  const deleteComment = async (commentId: string) => {
+    console.log(commentId);
+
+    // if (userProfile && commentId) {
+    //   setIsPostingComment(true);
+    //   const { data } = await axios.delete(`${BASE_URL}/api/post/${postId}`, {
+    //     commentId,
+    //   });
+    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
+    //   setComment("");
+    //   setIsPostingComment(false);
+    // }
+  };
+
+  const editComment = async ({
+    text,
+    event,
+    commentId,
+  }: {
+    text: string;
+    commentId: string;
+    event: { preventDefault: () => void };
+  }) => {
+    console.log(text, event, commentId);
+
+    // event.preventDefault();
+    // if (userProfile && comment) {
+    //   setIsPostingComment(true);
+    //   const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
+    //     updatedText: text,
+    //     commentId,
+    //   });
+    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
+    //   setComment("");
+    //   setIsPostingComment(false);
+    // }
+  };
+
+  console.log(comments);
 
   if (!post) return null;
   return (
@@ -165,11 +217,17 @@ const Detail = ({ postDetails }: IProps) => {
             )}
           </div>
           <Comments
-            comment={comment}
-            setComment={setComment}
-            addComment={addComment}
+            showAvatar={true}
+            showLikes={true}
+            postId={postId}
+            userId={userProfile._id}
+            userName={userProfile.userName}
+            userAvatar={userProfile.image}
+            authorId={userId}
             comments={comments || []}
-            isPostingComment={isPostingComment}
+            onAddingComment={(a: any) => console.log(a)}
+            onEditingComment={editComment}
+            onDeletingComment={deleteComment}
           />
         </div>
       </div>

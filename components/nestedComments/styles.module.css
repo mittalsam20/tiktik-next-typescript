@@ -1,0 +1,107 @@
+.comments {
+  margin-top: 20px;
+}
+
+.commentsTitle {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.commentsContainer {
+  margin-top: 40px;
+}
+
+.commentFormTitle {
+  font-size: 22px;
+}
+
+.commentFormTextarea {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  border: 1px solid rgb(107, 114, 12);
+}
+
+.button {
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+}
+
+.buttonPrimary {
+  background: rgb(59, 130, 246);
+  color: white;
+}
+
+.buttonSecondary {
+  background: rgb(192, 192, 192);
+  margin-right: 12px;
+}
+
+.button:hover:enabled {
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 28px;
+}
+
+.commentImageContainer {
+  margin-right: 12px;
+}
+
+.commentImageContainer img {
+  border-radius: 50px;
+}
+
+.commentRightPart {
+  width: 100%;
+}
+
+.commentContent {
+  display: flex;
+}
+
+.commentAuthor {
+  margin-right: 8px;
+  font-size: 20px;
+  color: rgb(59, 130, 246);
+}
+
+.commentText {
+  font-size: 18px;
+}
+
+.commentActions {
+  display: flex;
+  font-size: 12px;
+  color: rgb(51, 51, 51);
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.commentAction {
+  margin-right: 8px;
+}
+
+.commentAction:hover {
+  text-decoration: underline;
+}
+
+.replies {
+  margin-top: 20px;
+}
+
+.replyTextAreaContainer {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
