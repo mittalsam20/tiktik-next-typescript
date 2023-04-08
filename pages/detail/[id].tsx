@@ -22,8 +22,6 @@ interface IProps {
 
 const Detail = ({ postDetails }: IProps) => {
   const [post, setPost] = useState(postDetails);
-  const [comment, setComment] = useState("");
-  const [isPostingComment, setIsPostingComment] = useState(false);
   const [videoStates, setVideoStates] = useState({
     isPlaying: false,
     isMuted: false,
@@ -44,14 +42,14 @@ const Detail = ({ postDetails }: IProps) => {
     },
   } = post;
 
-  const onClickVideo = ({}) => {
+  const onClickVideo = () => {
     if (isPlaying) {
       videoRef?.current?.pause();
-      setVideoStates((prev) => ({ ...prev, playing: false }));
+      setVideoStates((prev) => ({ ...prev, isPlaying: false }));
       return;
     }
     videoRef?.current?.play();
-    setVideoStates((prev) => ({ ...prev, playing: true }));
+    setVideoStates((prev) => ({ ...prev, isPlaying: true }));
   };
 
   useEffect(() => {
@@ -71,70 +69,69 @@ const Detail = ({ postDetails }: IProps) => {
     }
   };
 
-  const addComment = async ({
-    text,
-    event,
-    parentId,
-  }: {
+  const onAddComment = async (params: {
     text: string;
     parentId: string;
     event: { preventDefault: () => void };
   }) => {
-    event.preventDefault();
+    const { text, parentId, event } = params;
     console.log(text, event, parentId);
-    // if (userProfile && comment) {
-    //   setIsPostingComment(true);
-    //   const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
-    //     userId: userProfile._id,
-    //     parentId,
-    //     comment,
-    //   });
-    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
-    //   setComment("");
-    //   setIsPostingComment(false);
-    // }
+    if (userProfile) {
+      const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
+        userId: userProfile._id,
+        parentId,
+        text,
+      });
+      console.log("xsxs", data);
+      setPost((prevState) => ({ ...prevState, comments: data.comments }));
+    }
   };
 
-  const deleteComment = async (commentId: string) => {
+  const onDeleteComment = async (params: { commentId: string }) => {
+    const { commentId } = params;
     console.log(commentId);
-
-    // if (userProfile && commentId) {
-    //   setIsPostingComment(true);
-    //   const { data } = await axios.delete(`${BASE_URL}/api/post/${postId}`, {
-    //     commentId,
-    //   });
-    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
-    //   setComment("");
-    //   setIsPostingComment(false);
-    // }
+    if (userProfile && commentId) {
+      axios.delete;
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/comment/${commentId}`
+      );
+      setPost((prevState) => ({ ...prevState, comments: data.comments }));
+    }
   };
 
-  const editComment = async ({
-    text,
-    event,
-    commentId,
-  }: {
+  const onEditComment = async (params: {
     text: string;
     commentId: string;
     event: { preventDefault: () => void };
   }) => {
+    const { text, event, commentId } = params;
     console.log(text, event, commentId);
-
-    // event.preventDefault();
-    // if (userProfile && comment) {
-    //   setIsPostingComment(true);
-    //   const { data } = await axios.put(`${BASE_URL}/api/post/${postId}`, {
-    //     updatedText: text,
-    //     commentId,
-    //   });
-    //   setPost((prevState) => ({ ...prevState, comments: data.comments }));
-    //   setComment("");
-    //   setIsPostingComment(false);
-    // }
+    if (userProfile) {
+      const response = await axios.put(`${BASE_URL}/api/comment/${commentId}`, {
+        updatedText: text,
+      });
+      console.log("reees", response);
+      setPost((prevState) => ({
+        ...prevState,
+        comments: response.data.comments,
+      }));
+    }
   };
 
+  const formattedComments = comments.map(
+    ({ _key, comment, parentId, postedBy }) => ({
+      commentId: _key,
+      body: comment,
+      parentId,
+      postId,
+      userDetails: {
+        userId: postedBy._id,
+        userName: postedBy.userName,
+        userImage: postedBy.image,
+      },
+    })
+  );
   console.log(comments);
-
   if (!post) return null;
   return (
     <div className="flex w-full absolute left-0 top-0 bg-white flex-wrap lg:flex-nowrap">
@@ -220,14 +217,14 @@ const Detail = ({ postDetails }: IProps) => {
             showAvatar={true}
             showLikes={true}
             postId={postId}
-            userId={userProfile._id}
-            userName={userProfile.userName}
-            userAvatar={userProfile.image}
             authorId={userId}
-            comments={comments || []}
-            onAddingComment={(a: any) => console.log(a)}
-            onEditingComment={editComment}
-            onDeletingComment={deleteComment}
+            currentUserId={userProfile._id}
+            currentUserName={userProfile.userName}
+            currentUserAvatar={userProfile.image}
+            comments={formattedComments || []}
+            onAddingComment={onAddComment}
+            onEditingComment={onEditComment}
+            onDeletingComment={onDeleteComment}
           />
         </div>
       </div>
