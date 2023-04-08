@@ -4,11 +4,11 @@ import styles from "../styles.module.css";
 const CommentForm = (props) => {
   const {
     parentId,
-    previousComment = "",
     submitLabel,
-    setActiveComment,
     handleSubmit,
     activeComment,
+    setActiveComment,
+    previousComment = "",
   } = props;
   const [text, setText] = useState(previousComment);
   const isTextAreaDisabled = text.length === 0 || text === previousComment;

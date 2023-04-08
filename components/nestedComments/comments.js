@@ -10,9 +10,9 @@ const Comments = (props) => {
   const {
     showAvatar,
     postId,
-    userId,
-    userName,
-    userAvatar,
+    currentUserId,
+    currentUserName,
+    currentUserAvatar,
     authorId,
     comments,
     onAddingComment,
@@ -23,9 +23,11 @@ const Comments = (props) => {
     id: null,
     mode: "VIEW",
   });
-  const rootComments = comments;
-  // .filter(({ parentId }) => parentId === null);
-  console.log("sss", comments, rootComments);
+  const rootComments = comments.filter(
+    ({ parentId }) => parentId === null || parentId === undefined
+  );
+  console.log(comments);
+
   return (
     <div className={styles.comments}>
       <h3 className={styles.commentsTitle}>comments</h3>
@@ -33,25 +35,29 @@ const Comments = (props) => {
       <CommentForm
         parentId={null}
         submitLabel="comment"
+        activeComment={activeComment}
         handleSubmit={onAddingComment}
         setActiveComment={setActiveComment}
       />
       <div className={styles.commentsContainer}>
         {rootComments.map((comment) => {
-          const { _key } = comment;
-          const replies = getReplies({ comments, commentId: _key });
+          const { commentId } = comment;
+          const replies = getReplies({ comments, commentId });
+          console.log("repleple", replies);
+          console.log(comment.userDetails.userId);
+          if (!comment.userDetails.userId) console.log("this is it", comment);
           return (
             <Comment
-              key={_key}
+              key={commentId}
               postId={postId}
-              userId={userId}
               comment={comment}
               replies={replies}
               comments={comments}
-              userName={userName}
               authorId={authorId}
               showAvatar={showAvatar}
-              userAvatar={userAvatar}
+              currentUserId={currentUserId}
+              currentUserName={currentUserName}
+              currentUserAvatar={currentUserAvatar}
               activeComment={activeComment}
               onAddingComment={onAddingComment}
               setActiveComment={setActiveComment}

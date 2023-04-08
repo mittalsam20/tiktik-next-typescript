@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 
 import CommentForm from "../commentForm";
+import { uuid } from "uuidv4";
+
 import styles from "../styles.module.css";
 import { getReplies } from "../helperFunctions";
 
@@ -8,16 +10,15 @@ const getActionButton = ({
   mode,
   userId,
   authorId,
-  activeUserId,
   commentId,
+  currentUserId,
   setActiveComment,
   onDeletingComment,
 }) => {
-  const isUser = activeUserId === userId;
-  const isAuthor = activeUserId === authorId;
+  const isUser = currentUserId === userId;
+  const isAuthor = currentUserId === authorId;
   // const fiveMinutes = 300000
   // const timePassed = new Date() - new Date(createdAt) > fiveMinutes
-  console.log(authorId, activeUserId, userId);
   const onClickEdit = () => {
     setActiveComment({ id: commentId, mode: "EDITING" });
   };
@@ -26,7 +27,7 @@ const getActionButton = ({
     {
       id: "REPLY",
       label: "Reply",
-      show: Boolean(activeUserId),
+      show: Boolean(currentUserId),
       disabled: mode !== "VIEW",
       onClick: () => setActiveComment({ id: commentId, mode: "REPLYING" }),
     },
@@ -55,9 +56,9 @@ const Comment = (props) => {
     comments,
     authorId,
     showAvatar,
-    userId: activeUserId,
-    userName: activeUserName,
-    userAvatar: activeUserAvatar,
+    currentUserId,
+    currentUserName,
+    currentUserAvatar,
     activeComment,
     onAddingComment,
     onEditingComment,
@@ -67,21 +68,20 @@ const Comment = (props) => {
 
   const { id: activeCommentId, mode } = activeComment;
   const {
-    _key: id,
-    comment: body,
-    // userName,
-    postedBy: { _ref: userId },
+    body,
     parentId,
+    commentId,
+    userDetails: { userId, userName, userImage },
   } = comment;
-
+  console.log(userId, userName, userImage);
   const submitLabel = mode === "EDITING" ? "Save" : "Comment";
   // const formattedDate = new Date(createdAt).toLocaleDateString();
   const actionButtons = getActionButton({
     mode,
     userId,
     authorId,
-    activeUserId,
-    commentId: id,
+    commentId,
+    currentUserId,
     setActiveComment,
     onDeletingComment,
   });
@@ -95,23 +95,22 @@ const Comment = (props) => {
     >
       {showAvatar && (
         <div className={styles.commentImageContainer}>
-          <img src={activeUserAvatar || `/user-icon.png`} alt="us" />
+          <img src={userImage} alt="us" />
         </div>
       )}
       <div className={styles.commentRightPart}>
-        {activeCommentId === id && mode === "EDITING" ? (
+        {activeCommentId === commentId && mode === "EDITING" ? (
           <CommentForm
-            parentId={parentId}
             previousComment={body}
             submitLabel={submitLabel}
-            handleSubmit={onEditingComment}
             activeComment={activeComment}
+            handleSubmit={onEditingComment}
             setActiveComment={setActiveComment}
           />
         ) : (
           <>
             <div className={styles.commentContent}>
-              <div className={styles.commentAuthor}>{userId}</div>
+              <div className={styles.commentAuthor}>{userName}</div>
               {/* <>{formattedDate}</> */}
             </div>
             <div className={styles.commentText}>{body}</div>
@@ -133,13 +132,13 @@ const Comment = (props) => {
           </>
         )}
 
-        {activeCommentId === id && mode === "REPLYING" && (
+        {activeCommentId === commentId && mode === "REPLYING" && (
           <div className={styles.replyTextAreaContainer}>
             <div className={styles.commentImageContainer}>
-              <img src="/user-icon.png" alt="ava" />
+              <img src={currentUserAvatar} alt="ava" />
             </div>
             <CommentForm
-              parentId={parentId}
+              parentId={commentId}
               submitLabel={submitLabel}
               activeComment={activeComment}
               handleSubmit={onAddingComment}
@@ -151,20 +150,20 @@ const Comment = (props) => {
         {replies.length && (
           <div className={styles.replies}>
             {replies.map((reply) => {
-              const { _key } = reply;
-              const nestedReplies = getReplies({ comments, commentId: _key });
+              const { commentId } = reply;
+              const nestedReplies = getReplies({ comments, commentId });
               return (
                 <Comment
-                  key={_key}
+                  key={commentId}
                   comment={reply}
                   postId={postId}
                   replies={nestedReplies}
                   comments={comments}
                   authorId={authorId}
                   showAvatar={showAvatar}
-                  userId={activeUserId}
-                  userName={activeUserName}
-                  userAvatar={activeUserAvatar}
+                  currentUserId={currentUserId}
+                  currentUserName={currentUserName}
+                  currentUserAvatar={currentUserAvatar}
                   activeComment={activeComment}
                   onAddingComment={onAddingComment}
                   onEditingComment={onEditingComment}
