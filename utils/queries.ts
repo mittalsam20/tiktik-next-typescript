@@ -8,7 +8,6 @@ export const allPostsQuery = () => {
           url
         }
       },
-      userId,
       postedBy->{
         _id,
         userName,
@@ -48,10 +47,12 @@ export const postDetailQuery = (postId: string | string[]) => {
      likes,
     comments[]{
       comment,
+      parentId,
       _key,
       postedBy->{
-        _ref,
-      _id,
+        _id,
+      userName,
+      image
     },
     }
   }`;

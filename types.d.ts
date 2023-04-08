@@ -22,8 +22,12 @@ export interface Video {
   comments: {
     comment: string;
     _key: string;
+    parentId: string;
     postedBy: {
+      _id: any;
       _ref: string;
+      userName: string;
+      image: string;
     };
   }[];
   userId: string;

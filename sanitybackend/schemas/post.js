@@ -17,11 +17,6 @@ export default {
       },
     },
     {
-      name: 'userId',
-      title: 'UserId',
-      type: 'string',
-    },
-    {
       name: 'postedBy',
       title: 'PostedBy',
       type: 'postedBy',

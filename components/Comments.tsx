@@ -22,7 +22,13 @@ interface IComment {
   comment: string;
   length?: number;
   _key: string;
-  postedBy: { _ref?: string; _type?: string };
+  postedBy: {
+    _ref?: string;
+    _type?: string;
+    _id: string;
+    userName: string;
+    image: string;
+  };
   parentId: string;
 }
 
@@ -34,7 +40,6 @@ const Comments = ({
   isPostingComment,
 }: IProps) => {
   const { userProfile, allUsers } = useAuthStore();
-  console.log(comments);
 
   return (
     <div className="border-t-2 border-gray-200 pt-4 px-10 mt-4 bg-[#F8F8F8] border-b-2 lg:pb-0 pb-[100px]">
